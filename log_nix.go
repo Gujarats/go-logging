@@ -69,9 +69,14 @@ func (b *LogBackend) Log(level Level, calldepth int, rec *Record) error {
 		buf.Write([]byte("\033[0m"))
 		// For some reason, the Go logger arbitrarily decided "2" was the correct
 		// call depth...
+
+		SaveMessageToFile(buf.String())
+		fmt.Println("buffer = ", buf.String())
 		return b.Logger.Output(calldepth+2, buf.String())
 	}
 
+	SaveMessageToFile(rec.Formatted(calldepth + 1))
+	fmt.Println("buffer = ", rec.Formatted(calldepth+1))
 	return b.Logger.Output(calldepth+2, rec.Formatted(calldepth+1))
 }
 
